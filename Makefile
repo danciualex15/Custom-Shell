@@ -1,24 +1,23 @@
-UTIL_PATH ?= ../util
-CPPFLAGS += -I.
+UTIL_PATH ?= ./util
+SRC_PATH ?= ./src
+CPPFLAGS += -I. -I$(SRC_PATH)
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -std=c99 -D_POSIX_C_SOURCE=200809L -g -Wall
 OBJ_PARSER = $(UTIL_PATH)/parser/parser.tab.o $(UTIL_PATH)/parser/parser.yy.o
-OBJ = main.o cmd.o utils.o
-TARGET = mini-shell
-.PHONY = build clean build_parser
+OBJ = $(SRC_PATH)/main.o $(SRC_PATH)/cmd.o $(SRC_PATH)/utils.o
+TARGET = custom-shell
+.PHONY = all build clean build_parser
 
 all: $(TARGET)
 
 $(TARGET): build_parser $(OBJ) $(OBJ_PARSER)
 	$(CC) $(CFLAGS) $(OBJ) $(OBJ_PARSER) -o $(TARGET)
 
+$(SRC_PATH)/%.o: $(SRC_PATH)/%.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
+
 build_parser:
 	$(MAKE) -C $(UTIL_PATH)/parser/
 
-pack: clean
-	-rm -f ../src.zip
-	zip -r ../src.zip *
-
 clean:
-	-rm -f ../src.zip
 	-rm -rf $(OBJ) $(OBJ_PARSER) $(TARGET) *~

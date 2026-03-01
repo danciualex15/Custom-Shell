@@ -18,7 +18,7 @@ void parse_error(const char *str, const int where)
 }
 
 /**
- * Readline from mini-shell.
+ * Readline from custom-shell.
  */
 static char *read_line(void)
 {
